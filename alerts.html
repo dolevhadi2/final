@@ -26,7 +26,8 @@
         <form id="callForm">
           <label>
             סוג קריאה:
-            <select name="type">
+            <select name="type" required>
+              <option disabled selected value="">בחר אפשרות</option>
               <option value="רגילה">רגילה</option>
               <option value="חירום">חירום</option>
               <option value="טכנית">טכנית</option>
@@ -35,7 +36,8 @@
 
           <label>
             רמת דחיפות:
-            <select name="priority">
+            <select name="priority" required>
+              <option disabled selected value="">בחר אפשרות</option>
               <option value="נמוכה">נמוכה</option>
               <option value="בינונית">בינונית</option>
               <option value="גבוהה">גבוהה</option>
@@ -45,7 +47,8 @@
 
           <label>
             סטטוס פניה:
-            <select name="status">
+            <select name="status" required>
+              <option disabled selected value="">בחר אפשרות</option>
               <option value="פתוחה">פתוחה</option>
               <option value="בטיפול">בטיפול</option>
               <option value="סגורה">סגורה</option>
@@ -98,8 +101,10 @@
       };
       calls.push(call);
       localStorage.setItem('calls', JSON.stringify(calls));
+
       form.reset();
       form.operator.value = localStorage.getItem('operatorName') || '';
+
       loadCalls();
     }
 
@@ -124,15 +129,18 @@
     window.onload = () => {
       let operatorName = localStorage.getItem('operatorName');
       if (!operatorName) {
-        operatorName = prompt("הזן את שם המוקדן");
+        operatorName = prompt("הזן את שם המוקדן:");
         if (!operatorName) operatorName = '';
         localStorage.setItem('operatorName', operatorName);
       }
       document.querySelector('input[name="operator"]').value = operatorName;
+
       document.getElementById('callForm').addEventListener('submit', saveCall);
+
       setInterval(() => {
         document.getElementById('datetimeAlert').textContent = new Date().toLocaleString('he-IL');
       }, 1000);
+
       loadCalls();
     };
   </script>
