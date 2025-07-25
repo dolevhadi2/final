@@ -93,7 +93,90 @@
   </footer>
 
   <script>
-    function initOperator() {
+    // טוען קריאות מ־localStorage
+function getCalls() {
+  return JSON.parse(localStorage.getItem('calls') || '[]');
+}
+
+// מציג תוצאות בטבלה — רק במידה ויש קריאות לסדר
+function renderResults(calls) {
+  const tbody = document.getElementById('resultsBody');
+  tbody.innerHTML = ''; // מנקה תמיד
+
+  // אם אין תוצאות, נשאר ריק
+  if (!calls.length) {
+    return;
+  }
+
+  calls.forEach(c => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${c.id}</td>
+      <td>${c.type}</td>
+      <td>${c.priority}</td>
+      <td>${c.status}</td>
+      <td>${c.operator}</td>
+      <td>${c.timestamp}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// מסנן ומציג רק אחרי לחיצה על "חפש"
+function filterCalls(e) {
+  e.preventDefault();
+  const form = document.getElementById('searchForm');
+  const filters = {
+    id: form.id.value,
+    type: form.type.value,
+    priority: form.priority.value,
+    status: form.status.value,
+    operator: form.operator.value
+  };
+  let calls = getCalls();
+  calls = calls.filter(c => {
+    return (!filters.id   || c.id == filters.id) &&
+           (!filters.type || c.type === filters.type) &&
+           (!filters.priority || c.priority === filters.priority) &&
+           (!filters.status   || c.status === filters.status) &&
+           (!filters.operator || c.operator === filters.operator);
+  });
+  renderResults(calls);
+}
+
+// מאפס תוצאות ומסננים
+function resetFilters() {
+  const form = document.getElementById('searchForm');
+  form.reset();
+  form.operator.value = localStorage.getItem('operatorName') || '';
+  // לא מציג כלום עד לחיצה חוזרת
+  document.getElementById('resultsBody').innerHTML = '';
+}
+
+// עדכון שעון
+/*function updateClock() {
+  document.getElementById('datetimeSearch').textContent =
+    new Date().toLocaleString('he-IL');
+}*/
+
+// אתחול הדף
+window.addEventListener('DOMContentLoaded', () => {
+  initOperator(); // שומר ושם שם המוקדן בשדה המתאים
+
+  // אל תחזיר תוצאות אוטומטיות
+  // renderResults(getCalls());  <--- נשמור על זה מושבת
+
+  document.getElementById('searchForm').addEventListener('submit', filterCalls);
+  document.getElementById('resetFilters').addEventListener('click', resetFilters);
+
+  setInterval(updateClock, 1000);
+  updateClock();
+});
+
+  </script>
+
+  <script>
+/*    function initOperator() {
       let name = localStorage.getItem('operatorName');
       if (!name) {
         name = prompt('הזן את שם המוקדן:');
@@ -161,6 +244,7 @@
       setInterval(updateClock, 1000);
       updateClock();
     };
+    */
   </script>
   <script src="functions.js"></script>
 </body>
