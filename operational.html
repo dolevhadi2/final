@@ -8,23 +8,21 @@
 </head>
 <body>
   <header>
-    <img src="logo.svg" alt="לוגו" style="height: 40px; vertical-align: middle;">
+    <img src="logo.svg" alt="לוגו מערכת" style="height: 40px; vertical-align: middle;">
     <span>דוחות תפעוליים</span>
   </header>
-
   <div class="layout">
     <nav class="sidebar">
       <a href="index.html">בית</a>
       <a href="alerts.html">התראות פעילות</a>
       <a href="reports.html">דו"חות סטטיסטיים</a>
       <a href="strategic.html">דוחות אסטרטגיים</a>
-      <a href="operational.html">דוחות תפעוליים</a>
+      <a href="operational.html" class="active">דוחות תפעוליים</a>
       <a href="managerial.html">דוחות ניהוליים</a>
     </nav>
-
     <main class="main">
       <div class='tableauPlaceholder' id='viz1753452105949' style='position: relative'>
-        <noscript><a href='#'><img alt='תפעולי ' src='https://public.tableau.com/static/images/_1/_17529556673380/sheet6/1_rss.png' style='border:none' /></a></noscript>
+        <noscript><a href='#'><img alt='תפעולי' src='https://public.tableau.com/static/images/_1/_17529556673380/sheet6/1_rss.png' style='border:none' /></a></noscript>
         <object class='tableauViz' style='display:none;'>
           <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F'/>
           <param name='embed_code_version' value='3'/>
@@ -40,35 +38,18 @@
           <param name='display_count' value='yes'/>
           <param name='language' value='en-US'/>
         </object>
-        <script type='text/javascript'>
-          var divElement = document.getElementById('viz1753452105949');
-          var vizElement = divElement.getElementsByTagName('object')[0];
-          if (divElement.offsetWidth > 800) {
-            vizElement.style.width = '100%';
-            vizElement.style.height = (divElement.offsetWidth * 0.75) + 'px';
-          } else if (divElement.offsetWidth > 500) {
-            vizElement.style.width = '100%';
-            vizElement.style.height = (divElement.offsetWidth * 0.75) + 'px';
-          } else {
-            vizElement.style.width = '100%';
-            vizElement.style.height = '1027px';
-          }
-          var scriptElement = document.createElement('script');
-          scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
-          vizElement.parentNode.insertBefore(scriptElement, vizElement);
-        </script>
-    </main>
+        <script type='text/javascript'>var divElement=document.getElementById('viz1753452105949');var vizElement=divElement.getElementsByTagName('object')[0];if(divElement.offsetWidth>800){vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';}else if(divElement.offsetWidth>500){vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';}else{vizElement.style.width='100%';vizElement.style.height='1027px';}var scriptElement=document.createElement('script');scriptElement.src='https://public.tableau.com/javascripts/api/viz_v1.js';vizElement.parentNode.insertBefore(scriptElement,vizElement);</script>
+      </main>
   </div>
-
   <footer>
-    <span id="datetime3"></span>
+    <span id="datetimeOperational"></span>
   </footer>
   <script>
-    function updateDateTime3() {
-      document.getElementById('datetime3').textContent = new Date().toLocaleString('he-IL');
+    function updateDateTimeOperational() {
+      document.getElementById('datetimeOperational').textContent = new Date().toLocaleString('he-IL');
     }
-    setInterval(updateDateTime3, 1000);
-    updateDateTime3();
+    setInterval(updateDateTimeOperational, 1000);
+    updateDateTimeOperational();
   </script>
 </body>
 </html>

@@ -8,15 +8,14 @@
 </head>
 <body>
   <header>
-    <img src="logo.svg" alt="לוגו" style="height: 40px; vertical-align: middle;">
+    <img src="logo.svg" alt="לוגו מערכת" style="height: 40px; vertical-align: middle;">
     <span>התראות פעילות</span>
     <span style="float: left;">משתמש: ___</span>
   </header>
   <div class="layout">
     <nav class="sidebar">
       <a href="index.html">בית</a>
-      <a href="alerts.html#newAlert">רישום התראה</a>
-      <a href="alerts.html#alertsTable">תצוגת התראות</a>
+      <a href="alerts.html" class="active">התראות פעילות</a>
       <a href="reports.html">דו"חות סטטיסטיים</a>
       <a href="strategic.html">דוחות אסטרטגיים</a>
       <a href="operational.html">דוחות תפעוליים</a>
@@ -48,7 +47,12 @@
         <h2>תצוגת התראות</h2>
         <table>
           <thead>
-            <tr><th>מזהה</th><th>סוג</th><th>חומרה</th><th>זמן יצירה</th></tr>
+            <tr>
+              <th>מזהה</th>
+              <th>סוג</th>
+              <th>חומרה</th>
+              <th>זמן יצירה</th>
+            </tr>
           </thead>
           <tbody></tbody>
         </table>
@@ -56,7 +60,7 @@
     </main>
   </div>
   <footer>
-    <span id="datetime"></span>
+    <span id="datetimeAlert"></span>
     <button onclick="logout()">יציאה</button>
     <small>שמור על פרטיותך</small>
   </footer>
@@ -64,17 +68,36 @@
     function saveAlert(e) {
       e.preventDefault();
       const form = document.getElementById('alertForm');
-      const alert = { id: form.id.value, type: form.type.value, severity: form.severity.value, timestamp: new Date().toLocaleString('he-IL') };
-      const alerts = JSON.parse(localStorage.getItem('alerts') || '[]'); alerts.push(alert); localStorage.setItem('alerts', JSON.stringify(alerts)); form.reset(); loadAlerts();
+      const alert = {
+        id: form.id.value,
+        type: form.type.value,
+        severity: form.severity.value,
+        timestamp: new Date().toLocaleString('he-IL')
+      };
+      const alerts = JSON.parse(localStorage.getItem('alerts') || '[]');
+      alerts.push(alert);
+      localStorage.setItem('alerts', JSON.stringify(alerts));
+      form.reset();
+      loadAlerts();
     }
     function loadAlerts() {
       const alerts = JSON.parse(localStorage.getItem('alerts') || '[]');
-      const tbody = document.querySelector('#alertsTable tbody'); tbody.innerHTML = '';
-      alerts.forEach(a => { const row = document.createElement('tr'); row.innerHTML = `<td>${a.id}</td><td>${a.type}</td><td>${a.severity}</td><td>${a.timestamp}</td>`; tbody.appendChild(row); });
+      const tbody = document.querySelector('#alertsTable tbody');
+      tbody.innerHTML = '';
+      alerts.forEach(a => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${a.id}</td><td>${a.type}</td><td>${a.severity}</td><td>${a.timestamp}</td>`;
+        tbody.appendChild(row);
+      });
     }
     document.getElementById('alertForm').addEventListener('submit', saveAlert);
-    setInterval(() => { document.getElementById('datetime').textContent = new Date().toLocaleString('he-IL'); }, 1000);
-    window.onload = loadAlerts; function logout() { alert('Logging out...'); }
+    setInterval(() => {
+      document.getElementById('datetimeAlert').textContent = new Date().toLocaleString('he-IL');
+    }, 1000);
+    window.onload = loadAlerts;
+    function logout() {
+      alert('Logging out...');
+    }
   </script>
 </body>
 </html>

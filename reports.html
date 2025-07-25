@@ -9,7 +9,7 @@
 </head>
 <body>
   <header>
-    <img src="logo.svg" alt="לוגו" style="height: 40px; vertical-align: middle;">
+    <img src="logo.svg" alt="לוגו מערכת" style="height: 40px; vertical-align: middle;">
     <span>דו"חות סטטיסטיים</span>
     <span style="float: left;">משתמש: ___</span>
   </header>
@@ -17,19 +17,22 @@
     <nav class="sidebar">
       <a href="index.html">בית</a>
       <a href="alerts.html">התראות פעילות</a>
+      <a href="reports.html" class="active">דו"חות סטטיסטיים</a>
       <a href="strategic.html">דוחות אסטרטגיים</a>
       <a href="operational.html">דוחות תפעוליים</a>
       <a href="managerial.html">דוחות ניהוליים</a>
     </nav>
     <main class="main">
       <section id="chart">
-        <h2>התפלגות התראות לפי סוג</h2>
+        <h2>מגמות עומס - BI</h2>
         <canvas id="typeChart" width="400" height="200"></canvas>
       </section>
       <section id="list">
         <h2>רשימת כל ההתראות</h2>
         <table id="alertsList">
-          <thead><tr><th>מזהה</th><th>סוג</th><th>חומרה</th><th>זמן יצירה</th></tr></thead>
+          <thead>
+            <tr><th>מזהה</th><th>סוג</th><th>חומרה</th><th>זמן יצירה</th></tr>
+          </thead>
           <tbody></tbody>
         </table>
       </section>
@@ -43,15 +46,27 @@
   <script>
     function loadReport() {
       const alerts = JSON.parse(localStorage.getItem('alerts') || '[]');
-      const tbody = document.querySelector('#alertsList tbody'); tbody.innerHTML = '';
-      alerts.forEach(a => { const row = document.createElement('tr'); row.innerHTML = `<td>${a.id}</td><td>${a.type}</td><td>${a.severity}</td><td>${a.timestamp}</td>`; tbody.appendChild(row); });
-      const counts = {}; alerts.forEach(a => counts[a.type] = (counts[a.type] || 0) + 1);
-      const labels = Object.keys(counts); const data = labels.map(l => counts[l]);
+      const tbody = document.querySelector('#alertsList tbody');
+      tbody.innerHTML = '';
+      alerts.forEach(a => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${a.id}</td><td>${a.type}</td><td>${a.severity}</td><td>${a.timestamp}</td>`;
+        tbody.appendChild(row);
+      });
+      const counts = {};
+      alerts.forEach(a => counts[a.type] = (counts[a.type]||0)+1);
+      const labels = Object.keys(counts);
+      const data = labels.map(l => counts[l]);
       const ctx = document.getElementById('typeChart').getContext('2d');
-      new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: 'מספר התראות', data }] }, options: { responsive: true } });
+      new Chart(ctx,{type:'bar',data:{labels, datasets:[{label:'מספר התראות', data}]},options:{responsive:true}});
     }
-    window.onload = () => { loadReport(); setInterval(() => { document.getElementById('datetime2').textContent = new Date().toLocaleString('he-IL'); }, 1000); };
-    function logout() { alert('Logging out...'); }
+    function logout(){alert('Logging out...');}
+    window.onload = () => {
+      loadReport();
+      setInterval(() => {
+        document.getElementById('datetime2').textContent = new Date().toLocaleString('he-IL');
+      },1000);
+    };
   </script>
 </body>
 </html>
