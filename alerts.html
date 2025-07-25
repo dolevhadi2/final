@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>התראות פעילות</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="logo.svg" alt="לוגו" style="height: 40px; vertical-align: middle;">
+    <span>התראות פעילות</span>
+    <span style="float: left;">משתמש: ___</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <a href="index.html">בית</a>
+      <a href="alerts.html#newAlert">רישום התראה</a>
+      <a href="alerts.html#alertsTable">תצוגת התראות</a>
+      <a href="reports.html">דו"חות סטטיסטיים</a>
+      <a href="strategic.html">דוחות אסטרטגיים</a>
+      <a href="operational.html">דוחות תפעוליים</a>
+      <a href="managerial.html">דוחות ניהוליים</a>
+    </nav>
+    <main class="main">
+      <section id="newAlert">
+        <h2>רישום התראה חדשה</h2>
+        <form id="alertForm">
+          <label>מזהה התראה: <input type="text" name="id" required></label>
+          <label>סוג תקלה:
+            <select name="type">
+              <option value="רגילה">רגילה</option>
+              <option value="חירום">חירום</option>
+              <option value="טכנית">טכנית</option>
+            </select>
+          </label>
+          <label>רמת חומרה:
+            <select name="severity">
+              <option value="נמוכה">נמוכה</option>
+              <option value="בינונית">בינונית</option>
+              <option value="גבוהה">גבוהה</option>
+            </select>
+          </label>
+          <button type="submit">שמור</button>
+        </form>
+      </section>
+      <section id="alertsTable">
+        <h2>תצוגת התראות</h2>
+        <table>
+          <thead>
+            <tr><th>מזהה</th><th>סוג</th><th>חומרה</th><th>זמן יצירה</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+  <footer>
+    <span id="datetime"></span>
+    <button onclick="logout()">יציאה</button>
+    <small>שמור על פרטיותך</small>
+  </footer>
+  <script>
+    function saveAlert(e) {
+      e.preventDefault();
+      const form = document.getElementById('alertForm');
+      const alert = { id: form.id.value, type: form.type.value, severity: form.severity.value, timestamp: new Date().toLocaleString('he-IL') };
+      const alerts = JSON.parse(localStorage.getItem('alerts') || '[]'); alerts.push(alert); localStorage.setItem('alerts', JSON.stringify(alerts)); form.reset(); loadAlerts();
+    }
+    function loadAlerts() {
+      const alerts = JSON.parse(localStorage.getItem('alerts') || '[]');
+      const tbody = document.querySelector('#alertsTable tbody'); tbody.innerHTML = '';
+      alerts.forEach(a => { const row = document.createElement('tr'); row.innerHTML = `<td>${a.id}</td><td>${a.type}</td><td>${a.severity}</td><td>${a.timestamp}</td>`; tbody.appendChild(row); });
+    }
+    document.getElementById('alertForm').addEventListener('submit', saveAlert);
+    setInterval(() => { document.getElementById('datetime').textContent = new Date().toLocaleString('he-IL'); }, 1000);
+    window.onload = loadAlerts; function logout() { alert('Logging out...'); }
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ראשי</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="logo.svg" alt="לוגו" style="height: 40px; vertical-align: middle;">
+    <span>מערכת מוקד</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <a href="alerts.html">התראות פעילות</a>
+      <a href="alerts.html#newAlert">רישום התראה</a>
+      <a href="alerts.html#alertsTable">תצוגת התראות</a>
+      <a href="reports.html">דו"חות סטטיסטיים</a>
+      <a href="strategic.html">דוחות אסטרטגיים</a>
+      <a href="operational.html">דוחות תפעוליים</a>
+      <a href="managerial.html">דוחות ניהוליים</a>
+    </nav>
+    <main class="main">
+      <h1>ברוכים הבאים למערכת המוקד</h1>
+      <p>בחרו בתפריט הימני כדי לנווט בין הדפים.</p>
+    </main>
+  </div>
+  <footer>
+    <span id="datetimeIndex"></span>
+  </footer>
+  <script>
+    function updateDateTimeIndex() {
+      document.getElementById('datetimeIndex').textContent = new Date().toLocaleString('he-IL');
+    }
+    setInterval(updateDateTimeIndex, 1000);
+    updateDateTimeIndex();
+  </script>
+</body>
+</html>
