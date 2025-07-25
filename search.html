@@ -60,7 +60,9 @@
           </label>
           <label>
             מוקדן מטפל:
-            <input type="text" name="operator" readonly>
+            <select name="operator">
+              <option value="">בחר אפשרות</option>
+            </select>
           </label>
           <button type="submit">חפש</button>
           <button type="button" id="resetFilters">נקה מסננים</button>
@@ -92,9 +94,88 @@
     <span id="datetime"></span>
   </footer>
 
+<script>
+    // טוען קריאות מ‐localStorage
+    function getCalls() {
+      return JSON.parse(localStorage.getItem('calls') || '[]');
+    }
+
+    // יוזם את רשימת המוקדנים (unique) לתפריט
+    function populateOperators() {
+      const calls = getCalls();
+      const uniq = [...new Set(calls.map(c => c.operator))];
+      const sel = document.querySelector('select[name="operator"]');
+      sel.innerHTML = '<option value="">בחר אפשרות</option>';
+      uniq.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        sel.appendChild(opt);
+      });
+    }
+
+    // מציג תוצאות בטבלה (רק אם יש קריאות מסוננות)
+    function renderResults(calls) {
+      const tbody = document.getElementById('resultsBody');
+      tbody.innerHTML = '';
+      if (!calls.length) return;
+      calls.forEach(c => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${c.id}</td>
+          <td>${c.type}</td>
+          <td>${c.priority}</td>
+          <td>${c.status}</td>
+          <td>${c.operator}</td>
+          <td>${c.timestamp}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // מסנן ומציג רק אחרי לחיצה על "חפש"
+    function filterCalls(e) {
+      e.preventDefault();
+      const form = document.getElementById('searchForm');
+      const f = {
+        id: form.id.value,
+        type: form.type.value,
+        priority: form.priority.value,
+        status: form.status.value,
+        operator: form.operator.value
+      };
+      let calls = getCalls();
+      calls = calls.filter(c =>
+        (!f.id       || c.id       == f.id) &&
+        (!f.type     || c.type     === f.type) &&
+        (!f.priority || c.priority === f.priority) &&
+        (!f.status   || c.status   === f.status) &&
+        (!f.operator || c.operator === f.operator)
+      );
+      renderResults(calls);
+    }
+
+    // מאפס מסננים ותוצאות
+    function resetFilters() {
+      const form = document.getElementById('searchForm');
+      form.reset();
+      populateOperators();
+      document.getElementById('resultsBody').innerHTML = '';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      populateOperators();
+      document.getElementById('searchForm').addEventListener('submit', filterCalls);
+      document.getElementById('resetFilters').addEventListener('click', resetFilters);
+      setInterval(updateClock, 1000);
+      updateClock();
+    });
+  </script>
+
   <script>
     // טוען קריאות מ־localStorage
-function getCalls() {
+/*
+    function getCalls() {
   return JSON.parse(localStorage.getItem('calls') || '[]');
 }
 
@@ -172,7 +253,7 @@ window.addEventListener('DOMContentLoaded', () => {
   setInterval(updateClock, 1000);
   updateClock();
 });
-
+/*
   </script>
 
   <script>
