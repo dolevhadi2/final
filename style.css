@@ -129,6 +129,7 @@ form select {
     margin: 0;
     order: 1;
   }
+}
 
 #searchForm {
   display: flex;
@@ -142,6 +143,4 @@ form select {
   flex-direction: column;
   margin: 0;
   min-width: 150px;
-}
-
 }
