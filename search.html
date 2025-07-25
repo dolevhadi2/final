@@ -89,9 +89,7 @@
   </div>
 
   <footer>
-    <span id="datetimeSearch"></span>
-    <button onclick="logout()">יציאה</button>
-    <small>שמור על פרטיותך</small>
+    <span id="datetime"></span>
   </footer>
 
   <script>
@@ -155,11 +153,11 @@
       renderResults(getCalls());
     }
 
-    function updateClock() {
+/*    function updateClock() {
       document.getElementById('datetimeSearch').textContent =
         new Date().toLocaleString('he-IL');
     }
-
+*/
     window.onload = () => {
       initOperator();
       renderResults(getCalls());
@@ -169,5 +167,6 @@
       updateClock();
     };
   </script>
+  <script src="functions.js"></script>
 </body>
 </html>
