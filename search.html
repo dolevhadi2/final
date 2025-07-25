@@ -10,7 +10,6 @@
   <header>
     <img src="logo.svg" alt="לוגו מערכת" style="height: 40px; vertical-align: middle;">
     <span>חיפוש קריאות</span>
-    <span style="float: left;">משתמש: ___</span>
   </header>
 
   <div class="layout">
@@ -18,7 +17,6 @@
       <a href="index.html">בית</a>
       <a href="alerts.html">רישום קריאה</a>
       <a href="search.html" class="active">חיפוש קריאות</a>
-      <a href="reports.html">דו"חות סטטיסטיים</a>
       <a href="strategic.html">דוחות אסטרטגיים</a>
       <a href="operational.html">דוחות תפעוליים</a>
       <a href="managerial.html">דוחות ניהוליים</a>
@@ -97,7 +95,6 @@
   </footer>
 
   <script>
-    // טוען שם המוקדן
     function initOperator() {
       let name = localStorage.getItem('operatorName');
       if (!name) {
@@ -109,12 +106,10 @@
       return name;
     }
 
-    // טוען קריאות מ־localStorage
     function getCalls() {
       return JSON.parse(localStorage.getItem('calls') || '[]');
     }
 
-    // מציג תוצאות בטבלה
     function renderResults(calls) {
       const tbody = document.getElementById('resultsBody');
       tbody.innerHTML = '';
@@ -132,7 +127,6 @@
       });
     }
 
-    // מסנן לפי טופס
     function filterCalls(e) {
       e.preventDefault();
       const form = document.getElementById('searchForm');
@@ -154,7 +148,6 @@
       renderResults(calls);
     }
 
-    // מנקה מסננים
     function resetFilters() {
       const form = document.getElementById('searchForm');
       form.reset();
@@ -162,11 +155,6 @@
       renderResults(getCalls());
     }
 
-    function logout() {
-      alert('Logging out...');
-    }
-
-    // עדכון שעון
     function updateClock() {
       document.getElementById('datetimeSearch').textContent =
         new Date().toLocaleString('he-IL');
