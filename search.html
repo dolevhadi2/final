@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>חיפוש קריאות</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="logo.svg" alt="לוגו מערכת" style="height: 40px; vertical-align: middle;">
+    <span>חיפוש קריאות</span>
+    <span style="float: left;">משתמש: ___</span>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <a href="index.html">בית</a>
+      <a href="alerts.html">רישום קריאה</a>
+      <a href="reports.html">דו"חות סטטיסטיים</a>
+      <a href="strategic.html">דוחות אסטרטגיים</a>
+      <a href="operational.html">דוחות תפעוליים</a>
+      <a href="managerial.html">דוחות ניהוליים</a>
+      <a href="search.html" class="active">חיפוש קריאות</a>
+    </nav>
+
+    <main class="main">
+      <section id="searchSection">
+        <h2>מסננים לחיפוש</h2>
+        <form id="searchForm">
+          <label>
+            מזהה שיחה:
+            <input type="number" name="id" placeholder="מספר מזהה">
+          </label>
+          <label>
+            סוג קריאה:
+            <select name="type">
+              <option value="">בחר אפשרות</option>
+              <option value="רגילה">רגילה</option>
+              <option value="חירום">חירום</option>
+              <option value="טכנית">טכנית</option>
+            </select>
+          </label>
+          <label>
+            רמת דחיפות:
+            <select name="priority">
+              <option value="">בחר אפשרות</option>
+              <option value="נמוכה">נמוכה</option>
+              <option value="בינונית">בינונית</option>
+              <option value="גבוהה">גבוהה</option>
+              <option value="מיידית">מיידית</option>
+            </select>
+          </label>
+          <label>
+            סטטוס פניה:
+            <select name="status">
+              <option value="">בחר אפשרות</option>
+              <option value="פתוחה">פתוחה</option>
+              <option value="בטיפול">בטיפול</option>
+              <option value="סגורה">סגורה</option>
+            </select>
+          </label>
+          <label>
+            מוקדן מטפל:
+            <input type="text" name="operator" readonly>
+          </label>
+          <button type="submit">חפש</button>
+          <button type="button" id="resetFilters">נקה מסננים</button>
+        </form>
+      </section>
+
+      <section id="resultsSection">
+        <h2>תוצאות החיפוש</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>מזהה שיחה</th>
+              <th>סוג קריאה</th>
+              <th>רמת דחיפות</th>
+              <th>סטטוס פניה</th>
+              <th>מוקדן מטפל</th>
+              <th>זמן יצירה</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+            <!-- יטען כאן דינמית -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <span id="datetimeSearch"></span>
+    <button onclick="logout()">יציאה</button>
+    <small>שמור על פרטיותך</small>
+  </footer>
+
+  <script>
+    // טוען שם המוקדן
+    function initOperator() {
+      let name = localStorage.getItem('operatorName');
+      if (!name) {
+        name = prompt('הזן את שם המוקדן:');
+        if (!name) name = '';
+        localStorage.setItem('operatorName', name);
+      }
+      document.querySelector('input[name="operator"]').value = name;
+      return name;
+    }
+
+    // טוען קריאות מ־localStorage
+    function getCalls() {
+      return JSON.parse(localStorage.getItem('calls') || '[]');
+    }
+
+    // מציג תוצאות בטבלה
+    function renderResults(calls) {
+      const tbody = document.getElementById('resultsBody');
+      tbody.innerHTML = '';
+      calls.forEach(c => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${c.id}</td>
+          <td>${c.type}</td>
+          <td>${c.priority}</td>
+          <td>${c.status}</td>
+          <td>${c.operator}</td>
+          <td>${c.timestamp}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // מסנן לפי טופס
+    function filterCalls(e) {
+      e.preventDefault();
+      const form = document.getElementById('searchForm');
+      const filters = {
+        id: form.id.value,
+        type: form.type.value,
+        priority: form.priority.value,
+        status: form.status.value,
+        operator: form.operator.value
+      };
+      let calls = getCalls();
+      calls = calls.filter(c => {
+        return (!filters.id || c.id == filters.id) &&
+               (!filters.type || c.type === filters.type) &&
+               (!filters.priority || c.priority === filters.priority) &&
+               (!filters.status || c.status === filters.status) &&
+               (!filters.operator || c.operator === filters.operator);
+      });
+      renderResults(calls);
+    }
+
+    // מנקה מסננים
+    function resetFilters() {
+      const form = document.getElementById('searchForm');
+      form.reset();
+      form.operator.value = localStorage.getItem('operatorName') || '';
+      renderResults(getCalls());
+    }
+
+    function logout() {
+      alert('Logging out...');
+    }
+
+    // עדכון שעון
+    function updateClock() {
+      document.getElementById('datetimeSearch').textContent =
+        new Date().toLocaleString('he-IL');
+    }
+
+    window.onload = () => {
+      initOperator();
+      renderResults(getCalls());
+      document.getElementById('searchForm').addEventListener('submit', filterCalls);
+      document.getElementById('resetFilters').addEventListener('click', resetFilters);
+      setInterval(updateClock, 1000);
+      updateClock();
+    };
+  </script>
+</body>
+</html>
