@@ -57,13 +57,6 @@
       const ctx = document.getElementById('typeChart').getContext('2d');
       new Chart(ctx,{type:'bar',data:{labels, datasets:[{label:'מספר התרעות', data}]},options:{responsive:true}});
     }
-    function logout(){alert('Logging out...');}
-    window.onload = () => {
-      loadReport();
-      setInterval(() => {
-        document.getElementById('datetime2').textContent = new Date().toLocaleString('he-IL');
-      },1000);
-    };
   </script>
 </body>
 </html>

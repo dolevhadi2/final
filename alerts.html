@@ -21,35 +21,56 @@
       <a href="managerial.html">דוחות ניהוליים</a>
     </nav>
     <main class="main">
-      <section id="newAlert">
-        <h2>רישום התרעה חדשה</h2>
-        <form id="alertForm">
-          <label>מזהה התרעה: <input type="number" name="id" required></label>
-          <label>סוג קריאה:
+      <section id="newCall">
+        <h2>רישום קריאה חדשה</h2>
+        <form id="callForm">
+          <label>
+            סוג קריאה:
             <select name="type">
               <option value="רגילה">רגילה</option>
               <option value="חירום">חירום</option>
               <option value="טכנית">טכנית</option>
             </select>
           </label>
-          <label>רמת חומרה:
-            <select name="severity">
+
+          <label>
+            רמת דחיפות:
+            <select name="priority">
               <option value="נמוכה">נמוכה</option>
               <option value="בינונית">בינונית</option>
               <option value="גבוהה">גבוהה</option>
+              <option value="מיידית">מיידית</option>
             </select>
           </label>
+
+          <label>
+            סטטוס פניה:
+            <select name="status">
+              <option value="פתוחה">פתוחה</option>
+              <option value="בטיפול">בטיפול</option>
+              <option value="סגורה">סגורה</option>
+            </select>
+          </label>
+
+          <label>
+            מוקדן מטפל:
+            <input type="text" name="operator" readonly>
+          </label>
+
           <button type="submit">שמור</button>
         </form>
       </section>
-      <section id="alertsTable">
-        <h2>תצוגת התרעות</h2>
+
+      <section id="callsTable">
+        <h2>תצוגת קריאות</h2>
         <table>
           <thead>
             <tr>
-              <th>מזהה</th>
-              <th>סוג</th>
-              <th>חומרה</th>
+              <th>מזהה שיחה</th>
+              <th>סוג קריאה</th>
+              <th>רמת דחיפות</th>
+              <th>סטטוס פניה</th>
+              <th>מוקדן מטפל</th>
               <th>זמן יצירה</th>
             </tr>
           </thead>
@@ -62,39 +83,58 @@
     <span id="datetimeAlert"></span>
   </footer>
   <script>
-    function saveAlert(e) {
+    function saveCall(e) {
       e.preventDefault();
-      const form = document.getElementById('alertForm');
-      const alert = {
-        id: form.id.value,
+      const form = document.getElementById('callForm');
+      const calls = JSON.parse(localStorage.getItem('calls') || '[]');
+      const id = calls.length + 1;
+      const call = {
+        id: id,
         type: form.type.value,
-        severity: form.severity.value,
+        priority: form.priority.value,
+        status: form.status.value,
+        operator: form.operator.value,
         timestamp: new Date().toLocaleString('he-IL')
       };
-      const alerts = JSON.parse(localStorage.getItem('alerts') || '[]');
-      alerts.push(alert);
-      localStorage.setItem('alerts', JSON.stringify(alerts));
+      calls.push(call);
+      localStorage.setItem('calls', JSON.stringify(calls));
       form.reset();
-      loadAlerts();
+      form.operator.value = localStorage.getItem('operatorName') || '';
+      loadCalls();
     }
-    function loadAlerts() {
-      const alerts = JSON.parse(localStorage.getItem('alerts') || '[]');
-      const tbody = document.querySelector('#alertsTable tbody');
+
+    function loadCalls() {
+      const calls = JSON.parse(localStorage.getItem('calls') || '[]');
+      const tbody = document.querySelector('#callsTable tbody');
       tbody.innerHTML = '';
-      alerts.forEach(a => {
+      calls.forEach(c => {
         const row = document.createElement('tr');
-        row.innerHTML = `<td>${a.id}</td><td>${a.type}</td><td>${a.severity}</td><td>${a.timestamp}</td>`;
+        row.innerHTML = `
+          <td>${c.id}</td>
+          <td>${c.type}</td>
+          <td>${c.priority}</td>
+          <td>${c.status}</td>
+          <td>${c.operator}</td>
+          <td>${c.timestamp}</td>
+        `;
         tbody.appendChild(row);
       });
     }
-    document.getElementById('alertForm').addEventListener('submit', saveAlert);
-    setInterval(() => {
-      document.getElementById('datetimeAlert').textContent = new Date().toLocaleString('he-IL');
-    }, 1000);
-    window.onload = loadAlerts;
-    function logout() {
-      alert('Logging out...');
-    }
+
+    window.onload = () => {
+      let operatorName = localStorage.getItem('operatorName');
+      if (!operatorName) {
+        operatorName = prompt("הזן את שם המוקדן");
+        if (!operatorName) operatorName = '';
+        localStorage.setItem('operatorName', operatorName);
+      }
+      document.querySelector('input[name="operator"]').value = operatorName;
+      document.getElementById('callForm').addEventListener('submit', saveCall);
+      setInterval(() => {
+        document.getElementById('datetimeAlert').textContent = new Date().toLocaleString('he-IL');
+      }, 1000);
+      loadCalls();
+    };
   </script>
 </body>
 </html>
